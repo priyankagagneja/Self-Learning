@@ -49,16 +49,16 @@ Important Learnings so far, main app components:
 > server <- function(input, output, session)
 
 1 _input_       
-- list-like object 
-- used for receiving input( sent from the browser)
-- read-only
-- must be read in a reactive context (e.g. renderText() or reactive())
+- list-like object       
+- used for receiving input( sent from the browser)       
+- read-only       
+- must be read in a reactive context (e.g. renderText() or reactive())      
 
 
 2 _output_     
-- list-like object 
-- used for sending output 
-- ALWAYS use with a render fn() - ssets up the reactive context & renders the HTML.
+- list-like object      
+- used for sending output       
+- ALWAYS use with a render fn() - sets up the reactive context & renders the HTML.      
 
 
 ```{r}
@@ -75,16 +75,16 @@ server <- function(input, output, session) {
 ```
 
 Mental Model       
-- tell vs inform (providing Shiny with recipes, not giving it commands).
+- tell vs inform (providing Shiny with recipes, not giving it commands).        
 
 
 **Imperative vs declarative programming**        
-This difference between commands and recipes is one of the key differences between two important styles of programming:
-- _Imperative_ programming - issue a specific command and it’s carried out immediately.
-- _Declarative_ programming - express higher-level goals or describe important constraints, and rely on someone else to decide how and/or when to translate that into action. 
+This difference between commands and recipes is one of the key differences between two important styles of programming:         
+- _Imperative_ programming - issue a specific command and it’s carried out immediately.       
+- _Declarative_ programming - express higher-level goals or describe important constraints, and rely on someone else to decide how and/or when to translate that into action.       
 
-- Imperative code is assertive; vs declarative code is passive-aggressive
-- “Make me a sandwich” vs “Ensure there is a sandwich in the refrigerator whenever I look inside of it”
+- Imperative code is assertive; vs declarative code is passive-aggressive       
+- “Make me a sandwich” vs “Ensure there is a sandwich in the refrigerator whenever I look inside of it”       
 
 In essesnce, you describe your overall goals, and the software figures out how to achieve them without further intervention. 
 
@@ -92,7 +92,7 @@ In essesnce, you describe your overall goals, and the software figures out how t
 **Laziness**       
 It allows apps to be extremely lazy. A Shiny app will only ever do the minimal amount of work needed to update the output controls that you can currently see.
 
-CAUTION: If you’re working on a Shiny app and you just can’t figure out why your code never gets run, double check that your UI and server functions are using the same identifiers. 
+_CAUTION_: If you’re working on a Shiny app and you just can’t figure out why your code never gets run, double check that your UI and server functions are using the same identifiers. 
 
 ****
 **The reactive graph**      
@@ -111,15 +111,16 @@ A[name] --- B>greeting]
 ")
 ```
 
-reactive graph is a powerful tool for understanding how your app works. 
-- Make by hand
-- Use DiagrammeR pkg to make it manually yourself
-- Use `reactlog` pkg to do it automatically (more in later chapters)
+reactive graph is a powerful tool for understanding how your app works.       
+- Make by hand     
+- Use DiagrammeR pkg to make it manually yourself     
+- Use `reactlog` pkg to do it automatically (more in later chapters)       
 
 ****
 **Reactive expressions**         
-reactive()
-A tool that **reduces duplication** in your reactive code by introducing additional nodes into the reactive graph
+**What** - A tool that **reduces duplication** in your reactive code by introducing additional nodes into the reactive graph       
+**How** - using `reactive()`      
+
 
 ```{r}
 # Just for example
@@ -147,7 +148,6 @@ It also simplifies the reactive graph.
 Reactive expressions have a flavour of both inputs and outputs:
 
 - Like inputs, you can use the results of a reactive expression in an output.
-
 - Like outputs, reactive expressions depend on inputs and automatically know when they need updating.
 
 New vocab:
@@ -170,12 +170,11 @@ server <- function(input, output, session) {
 **Controlling timing of evaluation**          
 
 **_Timed invalidation_**        
-reactiveTimer()
+**How** - using `reactiveTimer()`
 
 
 **_On click_**       
-actionButton()
-eventReactive()
+**How** - using `actionButton()`, `eventReactive()`      
 
 ****
 **Observers**         
@@ -185,7 +184,7 @@ There are two important differences between `observeEvent()` and `eventReactive(
 1.  You don't/can't assign the result of observeEvent() to a variable, so\
 2.  You can't refer to it from other reactive consumers.
 
-**Common structure**
+
 
 ### Execises
 
