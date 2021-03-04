@@ -105,7 +105,7 @@ _reactive graph_
 - describe this relationship (`output` has a reactive dependency on `input`)
 
 
-```{r}
+```{r reactive graph}
 mermaid("
 graph LR
 A[name] --- B>greeting]
@@ -133,7 +133,7 @@ server <- function(input, output, session) {
 
 ```
 
-```{r , echo=FALSE}
+```{r reactive graph with reactive() , echo=FALSE}
 
 mermaid("
 graph LR
@@ -160,12 +160,6 @@ New vocab:
 **Execution order**         
 - determined solely by the reactive graph (and not the order of lines of code/layout in the _server_ fn unlike normal R scripts)
 
-```{r}
-server <- function(input, output, session) {
-  output$greeting <- renderText(string())
-  string <- reactive(paste0("Hello ", input$name, "!"))
-}
-```
 
 ****
 **Controlling timing of evaluation**          
