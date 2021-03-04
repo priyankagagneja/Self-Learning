@@ -1,5 +1,5 @@
 ---
-title: "Ch-2"
+title: "Mastering Shiny: Ch-2"
 author: "Priyanka"
 date: "1/20/2021"
 output: html_document
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ##  {.tabset }
-### Introduction
+### Chapter Notes
 
 The minimum boilerplate needed for a Shiny app
 
@@ -42,7 +42,7 @@ For example:
 
 1. `selectInput()` is an input control that lets the user interact with the app by providing a value. More about inputs in coming chapters.     
 
-2. `verbatimTextOutput()` and `tableOutput()` are output controls that tell Shiny where to put rendered output. verbatimTextOutput() displays code and tableOutput() displays tables.  
+2. `verbatimTextOutput()` and `tableOutput()` are output controls that tell Shiny where to put rendered output. `verbatimTextOutput()` displays code and `tableOutput()` displays tables.  
 
 3. `fluidPage()` is a layout function that sets up the basic visual structure of the page. More in coming chapters.
 

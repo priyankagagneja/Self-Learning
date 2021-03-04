@@ -1,8 +1,11 @@
 ---
-title: "Ch-3"
+title: "Mastering Shiny: Ch-3"
 author: "Priyanka"
 date: "1/24/2021"
-output: html_document
+
+output: 
+  html_document:
+    code_folding: hide
 runtime: shiny
 ---
 
@@ -10,12 +13,101 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+##  {.tabset}
+
+### Chapter Notes {.tabset}
 
 #### 3.2 Inputs
-##### Exercise-3.2.8 
+
+**Common structure**
+
+1.  All input functions have the same first argument: `inputId`. This is the identifier used to connect the front end with the back end.
+
+2.  Most input functions have a second parameter called `label`.
+
+3.  The third parameter is typically `value`, which, where possible, lets you set the default value. The remaining parameters are unique to the control.
+
+The `inputId` has two constraints:
+
+1.  Name it like you would name a variable in R.(It must be a simple string that contains only letters, numbers, and underscores (no spaces, dashes, periods, or other special characters allowed!))
+
+2.  It must be unique.(If it's not unique, you'll have no way to refer to this control in your server function!)
+
+**Types**
+
+-   **Free text** - Collect small amounts of text with `textInput()`, passwords with `passwordInput()`, and paragraphs of text with `textAreaInput()`.
+
+-   **Numeric inputs** - To collect numeric values, create a slider with `sliderInput()` or a constrained textbox with `numericInput()`.
+
+-   **Dates** - To collect a single day with `dateInput()` or a range of days with `dateRangeInput()`.
+
+-   **Limited choices** - To allow the user to choose from a pre specified set of options: `selectInput()` and `radioButtons()`, `checkboxInput()` and `checkboxGroupInput()`.
+
+-   **File uploads** - To allow the user to upload a file with `fileInput()`.
+
+-   **Action buttons** - To let the user perform an action with `actionButton()` or `actionLink()`. These are most naturally paired with observeEvent() or eventReactive() in the server function.
+
+#### 3.3 Outputs
+
+Outputs in the UI create placeholders that are later filled by the server function.
+
+**Common structure**
+
+1.  Like inputs, outputs take a unique ID as their first argument.
+
+2.  Each output function on the front end is coupled with a render function in the back end.
+
+**Types**
+
+-   **Text** - Output regular text with `textOutput()` and fixed code and console output with `verbatimTextOutput()`.
+
+There are two render functions that can be used with either of the text outputs:
+
+-   `renderText()` combines the result into a single string.
+-   `renderPrint()` prints the result.
+
+This is same difference as that between cat() and print() in base R.\
+Tip: You should do as little computation in your render functions as possible.
+
+-   **Tables** -\
+    There are 2 options for table outputs:\
+
+-   `tableOutput()` for a static table of data, showing all the data at once. Preferred for small tables like fixed summaries (e.g. model coefficients).
+
+-   `dataTableOutput()` for a dynamic table, showing a fixed number of rows along with controls to change which rows are visible. Most appropriate if you want to expose a complete data frame to the user.
+
+There are 2 corresponding render functions:\
+\* `renderTable()` renders the static `tableOutput()` table.\
+\* `renderDataTable()` renders the dynamic `dataTableOutput()` table.
+
+Tip: `reactable` & `DT` package provide some more advanced options.
+
+-   **Plots** - You can display any type of R graphic (base, ggplot2, or otherwise) with `plotOutput()` and `renderPlot()`. One can customize the plot visuals by overriding the defaults with the `height` and `width` arguments.\
+    Plots are special because they are outputs that can also act as inputs. `plotOutput()` has a number of arguments like `click`, `dblclick`, and `hover`. If you pass these a string, like `click = "plot_click"`, they'll create a reactive input (input\$plot_click) that you can use to handle user interaction on the plot.
+
+-   **Downloads** - To allow the user to download a file. These require new techniques in the server function though
+
+#### 3.4 Layouts
+
+Layout functions help arrange the inputs & outputs on the page (gives high-level visual structure of an app). Layouts are created by a hierarchy of function calls, where the hierarchy in R matches the hierarchy in the output.
+
+**Common structure**
+
+1.  `fluidPage()` - sets up all the HTML, CSS, and JS that Shiny needs. fluidPage() uses a layout system called **Bootstrap**, <https://getbootstrap.com>, that provides attractive defaults.\
+2.  `sidebarLayout()`, along with `titlePanel()`, `sidebarPanel()`, and `mainPanel()`, makes it easy to create a two-column layout with inputs on the left and outputs on the right.\
+3.  `fluidRow()` creates rows, and column() creates columns. These 2 together help generate a multi-row app design.
+
+Note: first argument to column() is the width, and should always must add up to 12 for each row. This allows substantial flexibility to create 2-, 3-, or 4-column layouts , or use narrow columns to create spacers.
+
+Theming your app is quite straightforward: you just need to use the `theme argument` to `fluidPage()`. For more options, take a look at the Shiny theme selector app at <https://shiny.rstudio.com/gallery/shiny-theme-selector.html>. Or review the `fresh` package, which provides even more themes.
+
+### Exercises {.tabset}
+
+#### Exercise-3.2.8
 
 Q-1. Using the placeholder option in `textInput()`
-```{r Exercise-3.2.8, echo=FALSE}
+
+```{r eval=FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -28,40 +120,139 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+```{r  }
+# Looking into ?textInput was useful.
+textInput("name", label = "",placeholder = "Your name")
+```
+
 Q-2. Use sliderInput() to create a date slider
 
-```{r , echo=FALSE}
-library(shiny)
+```{r }
+sliderInput(inputId = "dates", label = "When should we deliver?",
+              min = as.Date("2019-08-09"), max = as.Date("2019-08-16"), 
+              value = as.Date("2019-08-10"))
+```
 
+Q-3. If you have a moderately long list, it's useful to create sub-headings that break the list up into pieces. Read the documentation for selectInput() to figure out how. (Hint: the underlying HTML is called <optgroup>.)
+
+```{r  }
+selectInput(
+  "survey",
+  "Select your satisfaction level of the product:",
+  choices =
+    list(`positive` = list('Extremely Satisfied', 'Moderately Satisfied', 'Sligtly Satisfied'),
+         `negative` = list('Extremely Dissatisfied', 'Moderately Dissatisfied', 'Sligtly Dissatisfied'))
+)
+```
+
+Q-4. Create a slider input to select values between 0 and 100 where the interval between each selectable value on the slider is 5. Then, add animation to the input widget so when the user presses play the input widget scrolls through automatically.
+
+```{r  }
+sliderInput("number", "Choose a number:", min = 0, max = 100, 
+            value = 0, step = 5, animate = TRUE)
+
+```
+
+Q-5. Using the following numeric input box the user can enter any value between 0 and 1000. What is the purpose of the step argument in this widget?
+
+```{r  }
+numericInput("number", "Select a value", value = 150, min = 0, max = 1000, step = 50)
+```
+
+The value can be input in the range of 0-1000 increasing by 50 units at a time (Using keyboard up/down keys or increase/decrease sign on the input box). Manual entering still allows any value, I tried 360, 470 etc.
+
+#### Exercise-3.3.5
+
+1.  Re-create the Shiny app from Section 3.3.3, this time setting height to 300px and width to 700px.
+
+```{r }
 ui <- fluidPage(
-  sliderInput(inputId = "dates", label = "When should we deliver?",
-  min = as.Date("2019-08-09"), max = as.Date("2019-08-16"), value = as.Date("2019-08-10"))
+  # Setting the static height/width requirements here.
+  plotOutput("plot", width = "700px", height = "300px")
+)
+
+server <- function(input, output, session) {
+  output$plot <- renderPlot(plot(1:5), res = 96)
+}
+```
+
+2.  Update the options for renderDataTable() below so that the table is displayed, but nothing else (i.e. remove the search, ordering, and filtering commands). You'll need to read ?renderDataTable and review the options at <https://datatables.net/reference/option/>.
+
+```{r }
+ui <- fluidPage(
+  dataTableOutput("table")
 )
 server <- function(input, output, session) {
-  renderText({ input$dates })
-  
+  output$table <- renderDataTable(mtcars, 
+            # options within this function has those customization options for the dataTable
+                                  options = list(ordering = FALSE, searching = FALSE))
+}
+```
+
+#### Exercise-3.4.6
+
+1.  Create an app with that contains two plots, each of which takes up half of the app (regardless of what size the whole app is).
+
+```{r Q1 }
+ui <- fluidPage(
+  fluidRow(
+    column(width = 6, plotOutput("plot1")),
+    column(width = 6, plotOutput("plot2"))
+  )
+)
+server <- function(input, output, session) {
+  output$plot1 <- renderPlot(plot(1:5))
+  output$plot2 <- renderPlot(plot(1:5))
 }
 
 shinyApp(ui, server)
 ```
 
+2.  Modify the Central Limit Theorem app so that the sidebar is on the right instead of the left.
 
-## Embedded Application
-
-```{r tabsets, echo=FALSE}
-shinyAppDir(
-  system.file("examples/06_tabsets", package = "shiny"),
-  options = list(
-    width = "100%", height = 550
+```{r Q2 }
+ui <- fluidPage(
+  headerPanel("Central limit theorem"),
+  sidebarLayout(
+    position = "right",
+    sidebarPanel(
+      numericInput("m", "Number of samples:", 2, min = 1, max = 100)
+    ),
+    mainPanel(
+      plotOutput("hist")
+    )
   )
 )
+
+shinyApp(ui, server)
 ```
 
-Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+3.  Browse the themes available in the `shinythemes` package, pick an attractive theme, and apply it the Central Limit Theorem app.
 
-You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+```{r Q3 }
+library(shinythemes)
 
-In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+ui <- fluidPage(
+  theme = shinythemes::shinytheme("journal"),
+  headerPanel("Central limit theorem"),
+  sidebarLayout(
+    position = "right",
+    sidebarPanel(
+      numericInput("m", "Number of samples:", 2, min = 1, max = 100)
+    ),
+    mainPanel(
+      plotOutput("hist")
+    )
+  )
+)
 
+server <- function(input, output, session) {
+  output$hist <- renderPlot({
+    means <- replicate(1e4, mean(runif(input$m)))
+    hist(means, breaks = 20)
+  })
+}
 
+shinyApp(ui, server)
 
+```
